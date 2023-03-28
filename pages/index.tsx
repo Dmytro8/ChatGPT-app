@@ -14,6 +14,8 @@ function Home() {
 const Container = styled(MuiContainer)(({ theme }) => ({
   height: "100%",
   overflow: "hidden",
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
 }));
 
 // Home.Layout = Layout;

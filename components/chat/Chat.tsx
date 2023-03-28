@@ -4,8 +4,12 @@ import { useCookies } from "react-cookie";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 
-import { type ChatGPTMessage, ChatLine, LoadingChatLine } from "../ChatLine";
 import { InputPanel } from "./InputPanel";
+import {
+  ChatGPTMessage,
+  ChatMessage,
+  ChatMessageSkeleton,
+} from "./ChatMessage";
 
 const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 
@@ -105,16 +109,17 @@ export const Chat = () => {
   return (
     <ChatContainer>
       <MessagesContainer>
-        {messages.map(({ content, role }, index, originMessages) => (
-          <Box
-            ref={originMessages.length === index + 1 ? messagesEndRef : null}
-          >
-            <ChatLine key={index} role={role} content={content} />
-          </Box>
-        ))}
+        {[
+          ...messages.map(({ content, role }, index, originMessages) => (
+            <Box
+              ref={originMessages.length === index + 1 ? messagesEndRef : null}
+            >
+              <ChatMessage key={index} role={role} content={content} />
+            </Box>
+          )),
+          loading && <ChatMessageSkeleton />,
+        ]}
       </MessagesContainer>
-
-      {loading && <LoadingChatLine />}
 
       {messages.length < 2 && (
         <ChatHint>{"Введіть повідомлення, щоб почати розмову"}</ChatHint>
@@ -132,11 +137,12 @@ const ChatContainer = styled(Box)(() => ({
   height: "100%",
 }));
 
-const MessagesContainer = styled(Box)(({theme}) => ({
+const MessagesContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   overflowY: "scroll",
   flexGrow: 1,
+  marginTop: theme.spacing(1),
   marginBottom: theme.spacing(1),
 }));
 
