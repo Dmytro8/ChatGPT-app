@@ -112,9 +112,10 @@ export const Chat = () => {
         {[
           ...messages.map(({ content, role }, index, originMessages) => (
             <Box
+              key={index}
               ref={originMessages.length === index + 1 ? messagesEndRef : null}
             >
-              <ChatMessage key={index} role={role} content={content} />
+              <ChatMessage role={role} content={content} />
             </Box>
           )),
           loading && <ChatMessageSkeleton />,
