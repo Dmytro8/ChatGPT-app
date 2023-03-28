@@ -1,7 +1,11 @@
 import React from "react";
-import { Button } from "./Button";
-import { type ChatGPTMessage, ChatLine, LoadingChatLine } from "./ChatLine";
 import { useCookies } from "react-cookie";
+
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+
+import { type ChatGPTMessage, ChatLine } from "../ChatLine";
+import { InputPanel } from "./InputPanel";
 
 const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 
@@ -9,70 +13,11 @@ const COOKIE_NAME = "nextjs-example-ai-chat-gpt3";
 export const initialMessages: ChatGPTMessage[] = [
   {
     role: "assistant",
-    content: "Hi! I am a friendly AI assistant. Ask me anything!",
+    content: "Привіт! Я Ваш помічник ШІ. З радістю відповім на Ваші питання.",
   },
 ];
 
-const InputMessage = ({
-  input,
-  setInput,
-  sendMessage,
-  speech,
-}: {
-  input: string;
-  setInput: (input: string) => void;
-  sendMessage: (message: string) => void;
-  speech?: {
-    listening: boolean;
-    handleStartListening: (e: any) => void;
-    handleEndListening: (e: any) => void;
-  };
-}) => {
-  return (
-    <div className="mt-6 flex clear-both">
-      <input
-        type="text"
-        aria-label="chat input"
-        required
-        className="min-w-0 flex-auto appearance-none rounded-md border border-zinc-900/10 bg-white px-3 py-[calc(theme(spacing.2)-1px)] shadow-md shadow-zinc-800/5 placeholder:text-zinc-400 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/10 sm:text-sm"
-        value={input}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            sendMessage(input);
-            setInput("");
-          }
-        }}
-        onChange={(e) => {
-          setInput(e.target.value);
-        }}
-      />
-      <Button
-        type="submit"
-        className="ml-4 flex-none"
-        onClick={() => {
-          sendMessage(input);
-          setInput("");
-        }}
-      >
-        Send
-      </Button>
-      {speech && (
-        <Button
-          type="submit"
-          className="ml-4 flex-none select-none"
-          onMouseDown={speech.handleStartListening}
-          onMouseUp={speech.handleEndListening}
-          onTouchStart={speech.handleStartListening}
-          onTouchEnd={speech.handleEndListening}
-        >
-          Say
-        </Button>
-      )}
-    </div>
-  );
-};
-
-export function Chat() {
+export const Chat = () => {
   const [messages, setMessages] =
     React.useState<ChatGPTMessage[]>(initialMessages);
   const [input, setInput] = React.useState("");
@@ -200,19 +145,19 @@ export function Chat() {
   };
 
   return (
-    <div className="rounded-2xl border-zinc-100  lg:border lg:p-6">
-      {messages.map(({ content, role }, index) => (
-        <ChatLine key={index} role={role} content={content} />
-      ))}
+    <ChatContainer>
+      <MessagesContainer>
+        {messages.map(({ content, role }, index) => (
+          <ChatLine key={index} role={role} content={content} />
+        ))}
+      </MessagesContainer>
 
-      {loading && <LoadingChatLine />}
+      {/* {loading && <LoadingChatLine />} */}
 
       {messages.length < 2 && (
-        <span className="mx-auto flex flex-grow text-gray-600 clear-both">
-          Type a message to start the conversation
-        </span>
+        <ChatHint>{"Введіть повідомлення, щоб почати розмову"}</ChatHint>
       )}
-      <InputMessage
+      <InputPanel
         input={input}
         setInput={setInput}
         sendMessage={sendMessage}
@@ -222,6 +167,29 @@ export function Chat() {
           handleEndListening,
         }}
       />
-    </div>
+    </ChatContainer>
   );
-}
+};
+
+const ChatContainer = styled(Box)(() => ({
+  position: "relative",
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+}));
+
+const MessagesContainer = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-end",
+  overflowY: "auto",
+  flexGrow: 1,
+}));
+
+const ChatHint = styled("div")({
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  whiteSpace: "nowrap",
+});
