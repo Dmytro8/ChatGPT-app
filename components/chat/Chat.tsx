@@ -106,10 +106,7 @@ export const Chat = () => {
       {messages.length < 2 && (
         <ChatHint>{"Введіть повідомлення, щоб почати розмову"}</ChatHint>
       )}
-      <InputPanel
-        sendMessage={sendMessage}
-        disabled={loading}
-      />
+      <InputPanel sendMessage={sendMessage} />
     </ChatContainer>
   );
 };
