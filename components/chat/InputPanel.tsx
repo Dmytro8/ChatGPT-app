@@ -12,8 +12,10 @@ import { styled } from "@mui/material/styles";
 import { useSpeechRecognition } from "../../speech/useRecognition";
 
 export const InputPanel = ({
+  disabled,
   sendMessage,
 }: {
+  disabled?: boolean;
   sendMessage: (message: string) => void;
 }) => {
   const { recognition, isRecogniting, startRecogniting, stopRecogniting } =
@@ -57,7 +59,7 @@ export const InputPanel = ({
           required
           sx={{ width: "100%" }}
           value={input}
-          disabled={isRecogniting}
+          disabled={disabled || isRecogniting}
           placeholder="Введіть своє повідомлення тут"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -75,7 +77,7 @@ export const InputPanel = ({
         type="submit"
         variant="contained"
         size="large"
-        disabled={isRecogniting}
+        disabled={disabled || isRecogniting}
         onClick={handleSendMessage}
       >
         <SendIcon />
@@ -84,6 +86,7 @@ export const InputPanel = ({
         size="large"
         type="submit"
         variant="contained"
+        disabled={disabled}
         onMouseDown={handleStartRecognition}
         onMouseUp={handleStopRecognition}
         onTouchStart={handleStartRecognition}

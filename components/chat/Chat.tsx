@@ -25,6 +25,7 @@ export const Chat = () => {
   const [cookie, setCookie] = useCookies([COOKIE_NAME]);
   const [isStreaming, setIsStreaming] = React.useState(false);
   const [stopGenerating, setStopGenerating] = React.useState(false);
+  const messagesEndRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (!cookie[COOKIE_NAME]) {
@@ -33,6 +34,10 @@ export const Chat = () => {
       setCookie(COOKIE_NAME, randomId);
     }
   }, [cookie, setCookie]);
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   // send message to API /api/chat endpoint
   const sendMessage = async (message: string) => {
@@ -93,11 +98,19 @@ export const Chat = () => {
     }
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView();
+  };
+
   return (
     <ChatContainer>
       <MessagesContainer>
-        {messages.map(({ content, role }, index) => (
-          <ChatLine key={index} role={role} content={content} />
+        {messages.map(({ content, role }, index, originMessages) => (
+          <Box
+            ref={originMessages.length === index + 1 ? messagesEndRef : null}
+          >
+            <ChatLine key={index} role={role} content={content} />
+          </Box>
         ))}
       </MessagesContainer>
 
@@ -106,7 +119,8 @@ export const Chat = () => {
       {messages.length < 2 && (
         <ChatHint>{"Введіть повідомлення, щоб почати розмову"}</ChatHint>
       )}
-      <InputPanel sendMessage={sendMessage} />
+
+      <InputPanel sendMessage={sendMessage} disabled={loading || isStreaming} />
     </ChatContainer>
   );
 };
@@ -118,12 +132,12 @@ const ChatContainer = styled(Box)(() => ({
   height: "100%",
 }));
 
-const MessagesContainer = styled(Box)(() => ({
+const MessagesContainer = styled(Box)(({theme}) => ({
   display: "flex",
   flexDirection: "column",
-  justifyContent: "flex-end",
-  overflowY: "auto",
+  overflowY: "scroll",
   flexGrow: 1,
+  marginBottom: theme.spacing(1),
 }));
 
 const ChatHint = styled("div")({
