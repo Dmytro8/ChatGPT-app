@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@types/dom-speech-recognition': ^0.0.1
   '@types/node': ^17.0.45
   '@types/react': latest
   '@vercel/analytics': ^0.1.11
@@ -32,8 +33,9 @@ dependencies:
   react-wrap-balancer: 0.1.5_react@18.2.0
 
 devDependencies:
+  '@types/dom-speech-recognition': 0.0.1
   '@types/node': 17.0.45
-  '@types/react': 18.0.28
+  '@types/react': 18.0.30
   autoprefixer: 10.4.14_postcss@8.4.21
   eslint: 8.36.0
   eslint-config-next: 12.3.4_vgl77cfdswitgr47lm5swmv43m
@@ -270,10 +272,14 @@ packages:
     resolution: {integrity: sha512-LKVP3cgXBT9RYj+t+9FDKwS5tdI+rPBXaNSkma7hvqy35lc7mAokC2zsqWJH0LaqIt3B962nuYI77hsJoT1gow==}
     dev: false
 
+  /@types/dom-speech-recognition/0.0.1:
+    resolution: {integrity: sha512-udCxb8DvjcDKfk1WTBzDsxFbLgYxmQGKrE/ricoMqHRNjSlSUCcamVTA5lIQqzY10mY5qCY0QDwBfFEwhfoDPw==}
+    dev: true
+
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
     dependencies:
-      '@types/react': 18.0.28
+      '@types/react': 18.0.30
       hoist-non-react-statics: 3.3.2
     dev: false
 
@@ -288,8 +294,8 @@ packages:
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
-  /@types/react/18.0.28:
-    resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
+  /@types/react/18.0.30:
+    resolution: {integrity: sha512-AnME2cHDH11Pxt/yYX6r0w448BfTwQOLEhQEjCdwB7QskEI7EKtxhGUsExTQe/MsY3D9D5rMtu62WRocw9A8FA==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
