@@ -60,11 +60,10 @@ const InputMessage = ({
         <Button
           type="submit"
           className="ml-4 flex-none select-none"
-          onClick={
-            speech.listening
-              ? speech.handleEndListening
-              : speech.handleStartListening
-          }
+          onMouseDown={speech.handleStartListening}
+          onMouseUp={speech.handleEndListening}
+          onTouchStart={speech.handleStartListening}
+          onTouchEnd={speech.handleEndListening}
         >
           {speech.listening ? "Stop" : "Start"}
         </Button>
@@ -134,6 +133,8 @@ export function Chat() {
     setListening(false);
     recognition.current?.stop();
     recognition.current?.removeEventListener("result", listenSpeech);
+    sendMessage(input);
+    setInput("");
     console.log("recognition ended");
   };
 
