@@ -54,7 +54,7 @@ const InputMessage = ({
           setInput("");
         }}
       >
-        Say
+        Send
       </Button>
       {speech && (
         <Button
@@ -65,7 +65,7 @@ const InputMessage = ({
           onTouchStart={speech.handleStartListening}
           onTouchEnd={speech.handleEndListening}
         >
-          {speech.listening ? "Stop" : "Start"}
+          Say
         </Button>
       )}
     </div>
@@ -78,6 +78,8 @@ export function Chat() {
   const [input, setInput] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [cookie, setCookie] = useCookies([COOKIE_NAME]);
+  const [isStreaming, setIsStreaming] = React.useState(false);
+  const [stopGenerating, setStopGenerating] = React.useState(false);
   const [listening, setListening] = React.useState(false);
   const recognition = React.useRef<
     | typeof window.SpeechRecognition["prototype"]
@@ -177,9 +179,13 @@ export function Chat() {
 
     let lastMessage = "";
 
-    while (!done) {
+    while (!done && !stopGenerating) {
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
+      setIsStreaming(!doneReading);
+      if (doneReading) {
+        setStopGenerating(false);
+      }
       const chunkValue = decoder.decode(value);
 
       lastMessage = lastMessage + chunkValue;
