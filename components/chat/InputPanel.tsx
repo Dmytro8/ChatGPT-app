@@ -2,27 +2,53 @@ import React from "react";
 
 import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import SendIcon from "@mui/icons-material/Send";
+
+import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
 import { styled } from "@mui/material/styles";
-import TextField from "@mui/material/TextField";
+
+import { useSpeechRecognition } from "../../speech/useRecognition";
 
 export const InputPanel = ({
-  input,
-  setInput,
   sendMessage,
-  speech,
 }: {
-  input: string;
-  setInput: (input: string) => void;
   sendMessage: (message: string) => void;
-  speech?: {
-    listening: boolean;
-    handleStartListening: (e: any) => void;
-    handleEndListening: (e: any) => void;
-  };
 }) => {
+  const { recognition, isRecogniting, startRecogniting, stopRecogniting } =
+    useSpeechRecognition();
+  const [input, setInput] = React.useState("");
+
+  React.useEffect(() => {
+    setInput(recognition);
+  }, [recognition]);
+
+  const handleStartRecognition = (e: any) => {
+    e.preventDefault();
+    try {
+      startRecogniting();
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const handleStopRecognition = (e: any) => {
+    e.preventDefault();
+    try {
+      stopRecogniting();
+      sendMessage(recognition);
+      setInput("");
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const handleSendMessage = () => {
+    sendMessage(input);
+    setInput("");
+  };
+
   return (
     <InputMessageFooter>
       <Box sx={{ flexGrow: 1 }}>
@@ -31,11 +57,11 @@ export const InputPanel = ({
           required
           sx={{ width: "100%" }}
           value={input}
+          disabled={isRecogniting}
           placeholder="Введіть своє повідомлення тут"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              sendMessage(input);
-              setInput("");
+              handleSendMessage();
             }
           }}
           onChange={(e) => {
@@ -49,26 +75,22 @@ export const InputPanel = ({
         type="submit"
         variant="contained"
         size="large"
-        onClick={() => {
-          sendMessage(input);
-          setInput("");
-        }}
+        disabled={isRecogniting}
+        onClick={handleSendMessage}
       >
         <SendIcon />
       </InputButton>
-      {speech && (
-        <InputButton
-          size="large"
-          type="submit"
-          variant="contained"
-          onMouseDown={speech.handleStartListening}
-          onMouseUp={speech.handleEndListening}
-          onTouchStart={speech.handleStartListening}
-          onTouchEnd={speech.handleEndListening}
-        >
-          <KeyboardVoiceIcon />
-        </InputButton>
-      )}
+      <InputButton
+        size="large"
+        type="submit"
+        variant="contained"
+        onMouseDown={handleStartRecognition}
+        onMouseUp={handleStopRecognition}
+        onTouchStart={handleStartRecognition}
+        onTouchEnd={handleStopRecognition}
+      >
+        <KeyboardVoiceIcon />
+      </InputButton>
     </InputMessageFooter>
   );
 };
